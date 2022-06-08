@@ -1,10 +1,6 @@
 import scrapy
 
 class SodimacSpider(scrapy.Spider):
-    import scrapy
-# from scrapy_splash import SplashRequest
-
-class SodimacSpider(scrapy.Spider):
     name = 'sodimac'
     start_urls = [ 'https://www.sodimac.com.ar/sodimac-ar/' ]
 
