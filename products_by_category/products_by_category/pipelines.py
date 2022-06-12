@@ -11,7 +11,8 @@ from itemadapter import ItemAdapter
 
 class ProductsByCategoryPipeline:
     def open_spider(self, spider):
-        self.file = open('products.jl','w')
+        spider_name = spider.name
+        self.file = open(f'{spider_name}.jl','w')
 
     def close_spider(self, spider):
         self.file.close()
