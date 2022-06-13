@@ -1,3 +1,4 @@
+from enum import unique
 import uuid
 from sqlalchemy import Column, ForeignKey, create_engine
 from sqlalchemy import Float, String
@@ -21,7 +22,7 @@ class RetailCompany(Base):
         primary_key=True,
         default=uuid.uuid4
     )
-    name = Column(String, nullable=False)
+    name = Column(String, nullable=False,unique=True)
 
     categories = relationship('Category',back_populates='retail_company', cascade='all, delete-orphan')
 
@@ -47,7 +48,7 @@ class Brand(Base):
         primary_key=True,
         default=uuid.uuid4
     )
-    name = Column(String, nullable=False)
+    name = Column(String, nullable=False,unique=True)
 
     products = relationship('Product',back_populates='brand', cascade='all, delete-orphan')
 

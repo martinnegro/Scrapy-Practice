@@ -8,9 +8,11 @@
 import json
 from itemadapter import ItemAdapter
 
+
 from sqlalchemy.orm import sessionmaker
-from products_by_category.products_by_category.models import create_tables, db_connect
-from products_by_category.products_by_category.models import RetailCompany, Category, Product
+from sqlalchemy import select
+from products_by_category.models import create_tables, db_connect
+from products_by_category.models import RetailCompany, Category, Product
 
 
 class JsonLPipeline:
@@ -37,17 +39,21 @@ class DBPipeline:
     def open_spider(self, spider):
         session = self.Session()
         retail_name =  spider.name
+        retail_query = select(RetailCompany).where(RetailCompany.name == retail_name)
 
+        retail_result = session.execute(retail_query)
 
+        print(f'\n\n===================\n!!!!!retail_result: {vars(retail_result)}\n=========================\n\n')
 
     def process_item(self, item, spider):
+        pass
         # Write to database
-        session = self.Session()
-        retail_company = RetailCompany()
-        category = Category()
-        product = Product()
+        # session = self.Session()
+        # retail_company = RetailCompany()
+        # category = Category()
+        # product = Product()
 
-        product.name = item['product_name']
-        product.price = item['product_price']
-        product.category = item['']
-        retail_company.name = spider.name
+        # product.name = item['product_name']
+        # product.price = item['product_price']
+        # product.category = item['']
+        # retail_company.name = spider.name
