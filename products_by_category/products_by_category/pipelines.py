@@ -8,8 +8,12 @@
 import json
 from itemadapter import ItemAdapter
 
+from sqlalchemy.orm import sessionmaker
+from products_by_category.products_by_category.models import create_tables, db_connect
+from products_by_category.products_by_category.models import RetailCompany, Category, Product
 
-class ProductsByCategoryPipeline:
+
+class JsonLPipeline:
     def open_spider(self, spider):
         spider_name = spider.name
         self.file = open(f'{spider_name}.jl','w')
@@ -21,4 +25,29 @@ class ProductsByCategoryPipeline:
         adapter = ItemAdapter(item)
         line = json.dumps(adapter.asdict()) + "\n"
         self.file.write(line)
+
         return item
+
+class DBPipeline:
+    def __init__(self):
+        engine = db_connect()
+        create_tables(engine)
+        self.Session = sessionmaker(bind=engine)
+
+    def open_spider(self, spider):
+        session = self.Session()
+        retail_name =  spider.name
+
+
+
+    def process_item(self, item, spider):
+        # Write to database
+        session = self.Session()
+        retail_company = RetailCompany()
+        category = Category()
+        product = Product()
+
+        product.name = item['product_name']
+        product.price = item['product_price']
+        product.category = item['']
+        retail_company.name = spider.name

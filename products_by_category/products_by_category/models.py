@@ -1,9 +1,17 @@
-from sqlalchemy import Column, Float, String, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID
 import uuid
+from sqlalchemy import Column, ForeignKey, create_engine
+from sqlalchemy import Float, String
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import declarative_base, relationship
+from scrapy.utils.project import get_project_settings
 
 Base = declarative_base()
+
+def db_connect():
+    return create_engine(get_project_settings().get('DB_CONNECTION'))
+
+def create_tables(engine):
+    Base.metadata.create_all(engine)
 
 class RetailCompany(Base):
     __tablename__ = 'retail_companies'
@@ -31,6 +39,18 @@ class Category(Base):
     retail_company =  relationship('RetailCompany',back_populates='categories')
     products = relationship('Product',back_populates='category', cascade='all, delete-orphan')
 
+class Brand(Base):
+    __tablename__ = 'brands'
+
+    id = Column(
+        UUID(as_uuid=True), 
+        primary_key=True,
+        default=uuid.uuid4
+    )
+    name = Column(String, nullable=False)
+
+    products = relationship('Product',back_populates='brand', cascade='all, delete-orphan')
+
 class Product(Base):
     __tablename__ = 'products'
 
@@ -42,5 +62,7 @@ class Product(Base):
     name = Column(String)
     price = Column(Float)
     category_id = Column(UUID, ForeignKey('categories.id'), nullable=False)
+    brand_id =  Column(UUID, ForeignKey('brands.id'), nullable=False)
 
     category = relationship('Category',back_populates='products')
+    brand = relationship('Brand',back_populates='products')
