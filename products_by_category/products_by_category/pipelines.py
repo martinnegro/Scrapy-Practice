@@ -10,7 +10,7 @@ from itemadapter import ItemAdapter
 
 
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import select
+from sqlalchemy import select, insert
 from products_by_category.models import create_tables, db_connect
 from products_by_category.models import RetailCompany, Category, Product
 
@@ -37,23 +37,27 @@ class DBPipeline:
         self.Session = sessionmaker(bind=engine)
 
     def open_spider(self, spider):
+        # Here we find or create the retail_company_id
+        # so it's available for make relationships
         session = self.Session()
         retail_name =  spider.name
+
         retail_query = select(RetailCompany).where(RetailCompany.name == retail_name)
+        retail_result = session.execute(retail_query).fetchone()
 
-        retail_result = session.execute(retail_query)
-
-        print(f'\n\n===================\n!!!!!retail_result: {vars(retail_result)}\n=========================\n\n')
+        if retail_result is not None:
+            self.retail_company_id = retail_query.id
+        else:
+            retail_instance = RetailCompany(name = retail_name)
+            self.retail_company_id = retail_instance.id
+            session.add(retail_instance)
+            session.commit()
+            session.refresh(retail_instance)
+            self.retail_company_id = retail_instance.id
 
     def process_item(self, item, spider):
-        pass
-        # Write to database
-        # session = self.Session()
-        # retail_company = RetailCompany()
-        # category = Category()
-        # product = Product()
+        print(f'\n\n===================\n!!!!!self.retail_company_id: {self.retail_company_id}\n=========================\n\n')
+        
 
-        # product.name = item['product_name']
-        # product.price = item['product_price']
-        # product.category = item['']
-        # retail_company.name = spider.name
+    def close_spider(self, spider):
+        self.Session

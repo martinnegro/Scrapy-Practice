@@ -1,5 +1,6 @@
 from enum import unique
 import uuid
+from click import echo
 from sqlalchemy import Column, ForeignKey, create_engine
 from sqlalchemy import Float, String
 from sqlalchemy.dialects.postgresql import UUID
@@ -9,14 +10,14 @@ from scrapy.utils.project import get_project_settings
 Base = declarative_base()
 
 def db_connect():
-    return create_engine(get_project_settings().get('DB_CONNECTION'))
+    return create_engine(get_project_settings().get('DB_CONNECTION'),echo=True,future=True)
 
 def create_tables(engine):
     Base.metadata.create_all(engine)
 
 class RetailCompany(Base):
     __tablename__ = 'retail_companies'
-
+        
     id = Column(
         UUID(as_uuid=True), 
         primary_key=True,
