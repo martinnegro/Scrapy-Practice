@@ -32,6 +32,7 @@ class JsonLPipeline:
 
 class DBPipeline:
     brand_ids = {}
+    category_ids = {}
 
     def __init__(self):
         engine = db_connect()
@@ -80,8 +81,28 @@ class DBPipeline:
                 session.refresh(brand_instance)
                 brand_id = brand_instance.id
                 self.brand_ids[brand_name] = brand_instance.id
+
+        category_name = item['category_name'][0]
+        category_id = None
+
+        if category_name in self.category_ids:
+            category_id = self.category_ids[category_name]
+        else:
+            # Check for category relationed with retail
+            category_query = select(Category).where(Category.name == category_name,Category.retail_company_id == self.retail_company_id)
+            category_result = session.execute(category_query).fetchone()
+            if category_result is not None:
+                category_id = category_result[0].id
+                self.category_ids[category_name] = category_result[0].id
+            else:
+                category_instance = Category(name = category_name,retail_company_id=self.retail_company_id)
+                session.add(category_instance)
+                session.commit()
+                session.refresh(category_instance)
+                category_id = category_instance.id
+                self.category_ids[category_name] = category_instance.id
         
-        # print(f'\n\n =======>>>> brand_id {brand_id}\n')
+        print(f'\n\n =======>>>> category_id {category_id}\n')
         # print(f'\n\n =======>>>> self.retail_company_id {self.retail_company_id}\n')
         session.close()
 

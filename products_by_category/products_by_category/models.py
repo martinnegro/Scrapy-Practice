@@ -36,7 +36,7 @@ class Category(Base):
         default=uuid.uuid4
     )
     name = Column(String, nullable=False)
-    retail_company_id = Column(UUID, ForeignKey('retail_companies.id'), nullable=False)
+    retail_company_id = Column(UUID(as_uuid=True), ForeignKey('retail_companies.id'), nullable=False)
 
     retail_company =  relationship('RetailCompany',back_populates='categories')
     products = relationship('Product',back_populates='category', cascade='all, delete-orphan')
@@ -63,8 +63,8 @@ class Product(Base):
     )
     name = Column(String)
     price = Column(Float)
-    category_id = Column(UUID, ForeignKey('categories.id'), nullable=False)
-    brand_id =  Column(UUID, ForeignKey('brands.id'), nullable=False)
+    category_id = Column(UUID(as_uuid=True), ForeignKey('categories.id'), nullable=False)
+    brand_id =  Column(UUID(as_uuid=True), ForeignKey('brands.id'), nullable=False)
 
     category = relationship('Category',back_populates='products')
     brand = relationship('Brand',back_populates='products')
