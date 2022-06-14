@@ -12,7 +12,7 @@ from itemadapter import ItemAdapter
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import select, insert
 from products_by_category.models import create_tables, db_connect
-from products_by_category.models import RetailCompany, Category, Product
+from products_by_category.models import RetailCompany, Category, Product, Brand
 
 
 class JsonLPipeline:
@@ -31,6 +31,8 @@ class JsonLPipeline:
         return item
 
 class DBPipeline:
+    brand_ids = {}
+
     def __init__(self):
         engine = db_connect()
         create_tables(engine)
@@ -46,18 +48,42 @@ class DBPipeline:
         retail_result = session.execute(retail_query).fetchone()
 
         if retail_result is not None:
-            self.retail_company_id = retail_query.id
+            self.retail_company_id = retail_result[0].id
         else:
             retail_instance = RetailCompany(name = retail_name)
-            self.retail_company_id = retail_instance.id
             session.add(retail_instance)
             session.commit()
             session.refresh(retail_instance)
             self.retail_company_id = retail_instance.id
+        
+        session.close()
 
     def process_item(self, item, spider):
-        print(f'\n\n===================\n!!!!!self.retail_company_id: {self.retail_company_id}\n=========================\n\n')
+        # Process brand
+        session = self.Session()
         
+        brand_name = item['brand_name'][0]
+        brand_id = None
+        
+        if brand_name in self.brand_ids:
+            brand_id = self.brand_ids[brand_name]
+        else:
+            brand_query = select(Brand).where(Brand.name == brand_name)
+            brand_result = session.execute(brand_query).fetchone()
+            if brand_result is not None:
+                brand_id = brand_result[0].id
+                self.brand_ids[brand_name] = brand_result[0].id
+            else:
+                brand_instance = Brand(name = brand_name)
+                session.add(brand_instance)
+                session.commit()
+                session.refresh(brand_instance)
+                brand_id = brand_instance.id
+                self.brand_ids[brand_name] = brand_instance.id
+        
+        # print(f'\n\n =======>>>> brand_id {brand_id}\n')
+        # print(f'\n\n =======>>>> self.retail_company_id {self.retail_company_id}\n')
+        session.close()
 
     def close_spider(self, spider):
         self.Session
