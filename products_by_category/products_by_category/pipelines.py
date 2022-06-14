@@ -60,7 +60,7 @@ class DBPipeline:
         session.close()
 
     def process_item(self, item, spider):
-        # Process brand
+        ### Process brand
         session = self.Session()
         
         brand_name = item['brand_name'][0]
@@ -82,6 +82,7 @@ class DBPipeline:
                 brand_id = brand_instance.id
                 self.brand_ids[brand_name] = brand_instance.id
 
+        ### Process category
         category_name = item['category_name'][0]
         category_id = None
 
@@ -102,9 +103,19 @@ class DBPipeline:
                 category_id = category_instance.id
                 self.category_ids[category_name] = category_instance.id
         
-        print(f'\n\n =======>>>> category_id {category_id}\n')
+        product_price = float(item['product_price'][0].strip('$.'))
+        product_instance = Product(
+            name = item['product_name'][0],
+            price = product_price,
+            category_id = category_id,
+            brand_id = brand_id
+        )
+        session.add(product_instance)
+        session.commit()
+
+        # print(f'\n\n =======>>>> category_id {category_id}\n')
         # print(f'\n\n =======>>>> self.retail_company_id {self.retail_company_id}\n')
         session.close()
 
     def close_spider(self, spider):
-        self.Session
+        pass

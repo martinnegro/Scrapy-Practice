@@ -10,7 +10,7 @@ from scrapy.utils.project import get_project_settings
 Base = declarative_base()
 
 def db_connect():
-    return create_engine(get_project_settings().get('DB_CONNECTION'),echo=True,future=True)
+    return create_engine(get_project_settings().get('DB_URI'),echo=True,future=True)
 
 def create_tables(engine):
     Base.metadata.create_all(engine)
