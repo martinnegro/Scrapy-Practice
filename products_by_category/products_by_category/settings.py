@@ -7,6 +7,10 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
+import os
+
+DB_URI = os.environ['DB_URI']
+
 BOT_NAME = 'products_by_category'
 
 SPIDER_MODULES = ['products_by_category.spiders']
@@ -14,7 +18,7 @@ NEWSPIDER_MODULE = 'products_by_category.spiders'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'products_by_category (+http://www.yourdomain.com)'
+# USER_AGENT = 'products_by_category (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -27,7 +31,7 @@ ROBOTSTXT_OBEY = True
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 0.5
+DOWNLOAD_DELAY = 1
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -65,7 +69,8 @@ DOWNLOAD_DELAY = 0.5
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'products_by_category.pipelines.ProductsByCategoryPipeline': 300,
+    'products_by_category.pipelines.JsonLPipeline': 300,
+    'products_by_category.pipelines.DBPipeline': 400,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
