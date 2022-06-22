@@ -8,7 +8,6 @@
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 import os
-# os.environ.setdefault('DB_URI',"postgresql+psycopg2://martinnegro:mor2410kista@localhost:5432/products_by_category")
 
 DB_URI = os.environ['DB_URI']
 
