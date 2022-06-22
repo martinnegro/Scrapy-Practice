@@ -25,9 +25,10 @@ class SodimacSpider(scrapy.Spider):
         menu = response.css('ul.MenuMobile-module_limited__2f7X-')
         categories = menu.css('a')
         for category in categories:
-            
             category_path = category.css('a::attr(href)').get()
             if category_path is None: continue
-
-            url = 'https://www.sodimac.com.ar' + category_path
-            yield scrapy.Request(url,callback=self.parse_category_page) 
+            # Checks if link is to a category page
+            category_subpath = category_path.split('/')[2]
+            if category_subpath == 'category' or category_subpath == 'landing':
+                url = 'https://www.sodimac.com.ar' + category_path
+                yield scrapy.Request(url,callback=self.parse_category_page) 
