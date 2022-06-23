@@ -15,7 +15,9 @@ class SodimacSpider(scrapy.Spider):
             product_loader = ItemLoader(item=ProductItem(), selector=product)
             
             product_loader.add_css('product_name','h2.jsx-411745769.product-title::text')
-            product_loader.add_css('product_price','div.jsx-4135487716.price.jsx-175035124 span::text')
+
+            product_price = product.css('span.jsx-4135487716 span::text').get().replace('$','').replace('.','')
+            product_loader.add_value('product_price',product_price)
             product_loader.add_css('brand_name','div.jsx-411745769.product-brand::text')
             product_loader.add_value('category_name',category_name) 
             

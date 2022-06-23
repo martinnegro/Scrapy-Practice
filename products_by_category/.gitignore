@@ -1,0 +1,6 @@
+settings.py
+__pycache__/
+geckodriver.log
+
+easy.jl
+sodimac.jl

@@ -103,7 +103,7 @@ class DBPipeline:
                 category_id = category_instance.id
                 self.category_ids[category_name] = category_instance.id
         
-        product_price = float(item['product_price'][0].strip('$').replace('.',''))
+        product_price = item['product_price'][0]
         product_instance = Product(
             name = item['product_name'][0],
             price = product_price,
