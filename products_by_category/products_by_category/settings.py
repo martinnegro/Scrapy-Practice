@@ -9,6 +9,7 @@
 
 import os
 
+
 DB_URI = os.environ['DB_URI']
 
 BOT_NAME = 'products_by_category'
@@ -24,12 +25,12 @@ SELENIUM_DRIVER_ARGUMENTS = []
 
 # SPLASH CONFIG
 # SPLASH_URL = 'http://localhost:8050'
-# DOWNLOADER_MIDDLEWARES = {
-#     'scrapy_splash.SplashCookiesMiddleware': 723,
-#     'scrapy_splash.SplashMiddleware': 725,
-#     'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
-#     'scrapy_selenium.SeleniumMiddleware': 800
-# }
+DOWNLOADER_MIDDLEWARES = {
+    # 'scrapy_splash.SplashCookiesMiddleware': 723,
+    # 'scrapy_splash.SplashMiddleware': 725,
+    # 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
+    'scrapy_selenium.SeleniumMiddleware': 800
+}
 # SPIDER_MIDDLEWARES = {
 #     'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
 # }
