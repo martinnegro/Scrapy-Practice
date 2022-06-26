@@ -113,8 +113,6 @@ class DBPipeline:
         session.add(product_instance)
         session.commit()
 
-        # print(f'\n\n =======>>>> category_id {category_id}\n')
-        # print(f'\n\n =======>>>> self.retail_company_id {self.retail_company_id}\n')
         session.close()
 
     def close_spider(self, spider):

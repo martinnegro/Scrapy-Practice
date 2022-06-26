@@ -26,7 +26,8 @@ class EasySpider(scrapy.Spider):
             product_loader.add_css('product_name','span.vtex-product-summary-2-x-productBrand.vtex-product-summary-2-x-productBrand--shelf-product-name.vtex-product-summary-2-x-brandName.vtex-product-summary-2-x-brandName--shelf-product-name.t-body::text')
             
             price_spans = product.css('span.vtex-product-price-1-x-currencyContainer span::text').getall()
-            product_price = float(''.join(price_spans).replace('$','').replace('.','').replace(',','.'))
+            product_price = ''.join(price_spans).replace('$','').replace('.','').replace(',','.').strip(' ')
+            print(f' ====>>>>> PRODUCT_PRICE: {product_price}')
             product_loader.add_value('product_price',product_price)
             
             brand_name = product.css('span.vtex-product-summary-2-x-productBrandName.vtex-product-summary-2-x-productBrandName--shelf-product-brand::text').get()
